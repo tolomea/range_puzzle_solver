@@ -94,10 +94,42 @@ class State(object):
                     self.patterns_for_blocked_cell[cell].append(pattern)
 
         # empty number cells
+        for cell in self.numbers:
+            self._set(cell, False)
 
         # blocked border cells
+        for row in range(self.height):
+            self._set((row, -1), True)
+            self._set((row, self.width), True)
+        for column in range(self.width):
+            self._set((-1, column), True)
+            self._set((self.height, column), True)
 
-    def number_cells(self):
+    def _set(self, cell, blocked):
+        if blocked:
+            matching_cells = self.blocked_cells
+            matching_patterns = self.patterns_for_blocked_cell
+            mismatching_patterns = self.patterns_for_empty_cell
+        else:
+            matching_cells = self.empty_cells
+            matching_patterns = self.patterns_for_empty_cell
+            mismatching_patterns = self.patterns_for_blocked_cell
+
+        assert cell not in self.empty_cells
+        assert cell not in self.blocked_cells
+        self.unknown_cells.discard(cell)
+        matching_cells.add(cell)
+        updated = set()
+        for pattern in mismatching_patterns[cell]:
+            updated.add(pattern.cell)
+            pattern.eliminated = True
+        for pattern in matching_patterns[cell]:
+            pattern.empty.discard(cell)
+            pattern.blocked.discard(cell)
+
+        return updated
+
+    def all_number_cells(self):
         return self.patterns_for_cell.keys()
 
     def dump(self):
