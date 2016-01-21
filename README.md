@@ -1,7 +1,7 @@
 We're going to work with patterns where a pattern is cross shape showing how the empty and blocked squares might be laid out relative to one number. The end of each arm has a blocked square and the rest of the arms are empty.
 First we will generate all the possible patterns for each number, then we will successively eliminate possible patterns via constraint propagation until we are left with only the actual patterns.
 Isn't this inefficient? I hear you ask. Just how many patterns are there for each number? you ask.
-If you take the 4 arms of the patterns cross, chop of the blocked squares and lay the empty squares end to end you get a strip of N-1 length (where N is the patterns number) with 3 cut points. So the question of how many patterns can be reduced to how many cut points which can trivially be shown to be N^3/6, the largest number is 15 which has 562 patterns, no biggie.
+If you take the 4 arms of the patterns cross, chop of the blocked squares and lay the empty squares end to end you get a strip of N-1 length (where N is the patterns number) with 3 cut points. So the question of how many patterns can be reduced to how many cut points which is given by (N(N+1)(N+2))/6, the largest number is 15 which has 680 patterns, no biggie.
 
 0: Load and print state.
 We'll have the usual clear text input and output format.
