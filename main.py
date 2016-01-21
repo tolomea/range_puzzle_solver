@@ -100,6 +100,23 @@ class State(object):
     def number_cells(self):
         return self.patterns_for_cell.keys()
 
+    def dump(self):
+        data = ""
+        for row in range(self.height):
+            for column in range(self.width):
+                cell = row, column
+                if cell in self.numbers:
+                    data += "{:02}".format(self.numbers[cell])
+                elif cell in self.unknown_cells:
+                    data += ".."
+                elif cell in self.empty_cells:
+                    data += "  "
+                elif cell in self.blocked_cells:
+                    data += "XX"
+                else:
+                    assert False
+            data += "\n"
+        return data
 
 if __name__ == "__main__":
     assert parse(example) == (9, 6, {(0, 2): 14, (1, 0): 8, (2, 5): 4, (4, 1): 2, (4, 4): 10, (6, 0): 4, (7, 5): 7, (8, 3): 7})
@@ -122,3 +139,4 @@ if __name__ == "__main__":
         ({(9, 20), (10, 21)}, {(8, 20), (10, 22), (11, 20), (10, 19)}),
         ({(9, 20), (8, 20)}, {(7, 20), (10, 21), (11, 20), (10, 19)}),
     ]
+    assert State(example).dump().strip() == example.strip()
