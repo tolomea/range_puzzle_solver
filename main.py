@@ -109,7 +109,10 @@ class State(object):
             self._set((-1, column), True)
             self._set((self.height, column), True)
 
-    def _set(self, cell, blocked):
+    def _set(self, cell, blocked, because=None):
+        if because is not None:
+            print(cell, "is", blocked, "because", because)
+
         if blocked:
             matching_cells = self.blocked_cells
             matching_patterns = self.patterns_for_blocked_cell
@@ -153,6 +156,18 @@ class State(object):
             data += "\n"
         return data
 
+
+    def set(self, cell, blocked, because):
+        updated = set()
+        updated.update(self._set(cell, blocked, because))
+
+        if blocked:
+            row, col = cell
+            for r, c in [(row + 1, col), (row - 1, col), (row, col + 1), (row, col - 1)]:
+                if 0 <= r < self.height and 0 <= c < self.width and (r, c) not in self.empty_cells:
+                    updated.update(self._set((r, c), False, cell))
+
+        return updated
 if __name__ == "__main__":
     assert parse(example) == (9, 6, {(0, 2): 14, (1, 0): 8, (2, 5): 4, (4, 1): 2, (4, 4): 10, (6, 0): 4, (7, 5): 7, (8, 3): 7})
     assert cross(10, 20, 1) == [(set(), {(9, 20), (10, 21), (11, 20), (10, 19)})]
