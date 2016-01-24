@@ -69,8 +69,12 @@ def cross(row, column, number):
 class Pattern(object):
     def __init__(self, row, column, empty, blocked):
         self.cell = (row, column)
-        self.empty = empty
-        self.blocked = blocked
+        # True = blocked, False = empty, None = unknown
+        self.blocked_cells = {}
+        for c in empty:
+            self.blocked_cells[c] = False
+        for c in blocked:
+            self.blocked_cells[c] = True
         self.eliminated = False
 
 
@@ -124,8 +128,7 @@ class State(object):
             updated.add(pattern.cell)
             pattern.eliminated = True
         for pattern in matching_patterns[cell]:
-            pattern.empty.discard(cell)
-            pattern.blocked.discard(cell)
+            del pattern.blocked_cells[cell]
 
         return updated
 
